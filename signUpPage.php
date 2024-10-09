@@ -1,5 +1,5 @@
 <?php  
-require 'Login.php';
+require 'signUp.php';
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +25,7 @@ require 'Login.php';
         <label>Password</label>
         <input type="password" name="password" placeholder="************" required>
         
-        <button class="login-button" name="submit">LOGIN</button>
+        <button class="login-button" name="submit">SIGN UP</button>
     </form>
 </div>
 </body>
