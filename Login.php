@@ -6,39 +6,46 @@ if (isset($_POST['submit'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Prepare the SQL statement
-    $sql = "SELECT * FROM user WHERE username = ? AND passwords = ?";
+    // Prepare the SQL statement to get user details by username
+    $sql = "SELECT * FROM user WHERE username = ?";
     $stmt = $conn->prepare($sql);
 
-    // Bind parameters to the SQL statement
-    $stmt->bind_param("ss", $username, $password);
+    // Bind the username parameter to the SQL statement
+    $stmt->bind_param("s", $username);
 
     // Execute the statement
     $stmt->execute();
 
     // Get the result
     $result = $stmt->get_result();
-    $count = $result->num_rows;
 
-    if ($count > 0) {
-        $checkRole = $result->fetch_array();
-        $role = $checkRole['role'];
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_array();
 
-        // Start the session
-        session_start();
+        // Verify the password
+        if (password_verify($password, $user['passwords'])) {
+            // Start the session
+            session_start();
 
-        if ($role == 0) {
-            // If the user is an admin
-            $_SESSION['log'] = 'logged';
-            $_SESSION['role'] = 'admin';
-            header('Location: ./admin/admin.php');
+            $role = $user['role'];
+
+            if ($role == 1) {
+                // If the user is an admin
+                $_SESSION['log'] = 'logged';
+                $_SESSION['role'] = 'admin';
+                header('Location: ./admin/admin.php');
+            } else {
+                // If the user is a regular user
+                $_SESSION['log'] = 'logged';
+                $_SESSION['role'] = 'user';
+                header('Location: ./user/user.php');
+            }
         } else {
-            // If the user is a regular user
-            $_SESSION['log'] = 'logged';
-            $_SESSION['role'] = 'user';
-            header('Location: ./user/user.php');
+            // If the password does not match
+            echo "Invalid username or password";
         }
     } else {
+        // If no user is found with that username
         echo "Invalid username or password";
     }
 }

@@ -19,6 +19,9 @@ require 'signUp.php';
             <h2>WELCOME TO TALKY</h2>
             <p>Sign into your account</p>
         </div>
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Enter your Name" required>
+        
         <label>Username</label>
         <input type="text" name="username" placeholder="Enter your username" required>
         
